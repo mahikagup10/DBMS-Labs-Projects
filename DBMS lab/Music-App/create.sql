@@ -1,0 +1,53 @@
+CREATE TABLE userAccount(
+    UserID INTEGER,
+    Email VARCHAR(100) UNIQUE,
+    UserPassword VARCHAR(20) NOT NULL,
+    Dob DATE,
+    Gender VARCHAR(3), 
+    Subscription INTEGER,
+    DateSubscribed DATE,
+    PRIMARY KEY (UserID)
+);
+
+CREATE TABLE artist(
+    ArtistID INTEGER PRIMARY KEY,
+    ArtistName VARCHAR(100)
+);
+
+CREATE TABLE album(AlbumID INTEGER PRIMARY KEY,AlbumName VARCHAR(100),AlbumYear INTEGER,Genre VARCHAR(20));
+
+CREATE TABLE releases(
+    AlbumID INTEGER REFERENCES album(AlbumID) ON DELETE CASCADE,
+    ArtistID INTEGER REFERENCES artist(ArtistID) ON DELETE CASCADE,
+    PRIMARY KEY(AlbumID, ArtistID)
+);
+
+CREATE TABLE song(
+    SongID INTEGER,
+    ArtistID INTEGER REFERENCES artist(ArtistID) ON DELETE CASCADE,
+    AlbumID INTEGER REFERENCES album(AlbumID) ON DELETE CASCADE,
+    Streams INTEGER DEFAULT 0,
+    SongName VARCHAR(100),
+    SongLength FLOAT(3),
+    Genre VARCHAR(100),
+    PRIMARY KEY(SongID)
+);
+
+CREATE TABLE playlist(
+    UserID INTEGER REFERENCES userAccount(UserID) ON DELETE CASCADE,
+    PlaylistID INTEGER,
+    PlaylistName VARCHAR(100),
+    PRIMARY KEY(PlaylistID)
+);
+
+CREATE TABLE contains(
+    AlbumID INTEGER REFERENCES album(AlbumID) ON DELETE CASCADE,
+    SongID INTEGER REFERENCES song(SongID) ON DELETE CASCADE
+);
+
+CREATE TABLE follows(
+    UserID INTEGER REFERENCES userAccount(UserID) ON DELETE CASCADE,
+    ArtistID INTEGER REFERENCES artist(ArtistID) ON DELETE CASCADE,
+    Followers INTEGER DEFAULT 0, 
+    Followering INTEGER DEFAULT 0 
+);
